@@ -23,21 +23,31 @@ const gameController = (function () {
   return { switchPlayer, getStatus };
 })();
 
-function Player(id, name, mark) {
-  this.id = id;
+function Player(status, name, mark) {
+  this.status = status;
   this.name = name;
   this.mark = mark;
 }
 
-const playerOne = new Player(0, "Ivan", "X");
+Player.prototype.changeStatus = function () {
+  this.status = this.status ? false : true;
+};
+
+const playerOne = new Player(true, "Ivan", "X");
+const playerTwo = new Player(false, "Sergey", "0");
 
 const squares = document.querySelectorAll(".square");
 gameBoard.displayField(squares);
 
 squares.forEach((square) => {
   square.addEventListener("click", () => {
-    if (!square.textContent) {
+    if (!square.textContent && playerOne.status) {
       square.textContent = playerOne.mark;
     }
+    if (!square.textContent && playerTwo.status) {
+      square.textContent = playerTwo.mark;
+    }
+    playerOne.changeStatus();
+    playerTwo.changeStatus();
   });
 });
