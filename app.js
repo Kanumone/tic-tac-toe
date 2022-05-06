@@ -1,5 +1,5 @@
 const gameBoard = (function () {
-  let field = ["", "X", "", "", "0", "", "", "", ""];
+  let field = ["", "", "", "", "", "", "", "", ""];
   function changeField(id, value) {
     field[id] = value;
   }
