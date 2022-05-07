@@ -1,7 +1,9 @@
 const gameBoard = (function () {
   let field = ["", "", "", "", "", "", "", "", ""];
   function changeField(id, value) {
-    field[id] = value;
+    if (!field[id]) {
+      field[id] = value;
+    }
   }
   function displayField(squares) {
     for (let i = 0; i < squares.length; i++) {
@@ -12,7 +14,7 @@ const gameBoard = (function () {
 })();
 
 const gameController = (function () {
-  let activePlayer = 0;
+  let activePlayer = 1;
   function switchPlayer() {
     activePlayer = activePlayer ? 0 : 1;
   }
@@ -23,8 +25,7 @@ const gameController = (function () {
   return { switchPlayer, getStatus };
 })();
 
-function Player(status, name, mark) {
-  this.status = status;
+function Player(name, mark) {
   this.name = name;
   this.mark = mark;
 }
@@ -33,21 +34,20 @@ Player.prototype.changeStatus = function () {
   this.status = this.status ? false : true;
 };
 
-const playerOne = new Player(true, "Ivan", "X");
-const playerTwo = new Player(false, "Sergey", "0");
+const playerOne = new Player("Ivan", "X");
+const playerTwo = new Player("Sergey", "0");
 
 const squares = document.querySelectorAll(".square");
-gameBoard.displayField(squares);
 
 squares.forEach((square) => {
   square.addEventListener("click", () => {
-    if (!square.textContent && playerOne.status) {
-      square.textContent = playerOne.mark;
+    
+    if (gameController.getStatus()) {
+      gameBoard.changeField(square.id, playerOne.mark);
+    } else {
+      gameBoard.changeField(square.id, playerTwo.mark);
     }
-    if (!square.textContent && playerTwo.status) {
-      square.textContent = playerTwo.mark;
-    }
-    playerOne.changeStatus();
-    playerTwo.changeStatus();
+    gameController.switchPlayer();
+    gameBoard.displayField(squares);
   });
 });
