@@ -8,13 +8,24 @@
   width: 100vw;
   overflow: hidden;
   display: flex;
+  gap: 5vh;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
+.result {
+  opacity: 0;
+  text-align: center;
+  font-size: 3rem;
+  width: 25vw;
+  color: rgb(242, 92, 92);
+  transition: 100ms ease-in;
+}
+
 .field {
   height: 45vh;
-  width: 30vw;
+  width: 25vw;
   display: grid;
   grid-template: 33% 33% 33% / 33% 33% 33%;
 }
@@ -26,4 +37,3 @@
   align-items: center;
   border: 2px solid;
 }
-

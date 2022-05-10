@@ -19,32 +19,52 @@ const gameBoard = (function () {
 
 const gameController = (function () {
   let activePlayer = 1;
+
   function switchPlayer() {
     activePlayer = activePlayer ? 0 : 1;
   }
+
   function getStatus() {
     if (activePlayer) return true;
     else return false;
   }
+
   function checkGame(field) {
+    let winner;
     for (let i = 0; i < 8; i++) {
       if (i <= 2) {
         if (field[i] && field[i + 3] === field[i] && field[i + 6] === field[i]) {
-          console.log(`${field[i]} won`);
+          winner = { mark: field[i], elements: [i, i + 3, i + 6] };
         } else if (field[0] && field[i + 4] === field[i] && field[i + 8] === field[i]) {
-          console.log(`${field[i]} won`);
+          winner = { mark: field[i], elements: [i, i + 4, i + 8] };
         } else if (field[2] && field[i + 2] === field[i] && field[i + 4] === field[i]) {
-          console.log(`${field[i]} won`);
+          winner = { mark: field[i], elements: [i, i + 2, i + 4] };
         }
       }
 
       if (i % 3 === 0 && field[i] && field[i + 1] === field[i]
-          && field[i + 2] === field[i]) {
-            console.log(`${field[i]} won`);
+        && field[i + 2] === field[i]) {
+        winner = { mark: field[i], elements: [i, i + 1, i + 2] };
       }
     }
+    return winner ? winner : false;
   }
-  return { switchPlayer, getStatus, checkGame };
+
+  function gameOver(winner) {
+    const winnerDisplay = document.querySelector('.result');
+    winnerDisplay.textContent = `Winner is ${winner.mark}`;
+    for (let i = 0; i < 3; i++) {
+      setTimeout(() => {
+        const element = document.getElementById(winner.elements[i]);
+        element.style.cssText = "font-weight: bold; background-color: red";
+      }, i * 300);
+    }
+    setTimeout(() => {
+      winnerDisplay.style.opacity = "1";
+    }, 1000);
+
+  }
+  return { switchPlayer, getStatus, checkGame, gameOver };
 })();
 
 function Player(name, mark) {
@@ -56,19 +76,22 @@ const playerOne = new Player("Ivan", "X");
 const playerTwo = new Player("Sergey", "0");
 
 const squares = document.querySelectorAll(".square");
+const field = document.querySelector(".field");
 
 squares.forEach((square) => {
   square.addEventListener("click", () => {
-    let changeStatus;
+    let fieldStatus;
     if (gameController.getStatus()) {
-      changeStatus = gameBoard.changeField(square.id, playerOne.mark);
+      fieldStatus = gameBoard.changeField(square.id, playerOne.mark);
     } else {
-      changeStatus = gameBoard.changeField(square.id, playerTwo.mark);
+      fieldStatus = gameBoard.changeField(square.id, playerTwo.mark);
     }
-    if (changeStatus) {
+    if (fieldStatus) {
       gameController.switchPlayer();
-      gameController.checkGame(changeStatus);
+      let winner = gameController.checkGame(fieldStatus);
+      gameBoard.displayField(squares);
+      if (winner) gameController.gameOver(winner);
     }
-    gameBoard.displayField(squares);
+
   });
 });
