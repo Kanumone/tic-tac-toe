@@ -19,7 +19,8 @@
   text-align: center;
   font-size: 3rem;
   width: 25vw;
-  color: rgb(242, 92, 92);
+  height: 7vh;
+  color: coral;
   transition: 100ms ease-in;
 }
 
@@ -28,6 +29,7 @@
   width: 25vw;
   display: grid;
   grid-template: 33% 33% 33% / 33% 33% 33%;
+  gap: 5px;
 }
 
 .square {
